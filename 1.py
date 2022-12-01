@@ -1,15 +1,4 @@
-import functools
-
 input = open("./1.input").read()
-
-maxes = []
-for elf in input.split("\n\n"):
-    sum = 0
-    for n in elf.split("\n"):
-        sum += int(n)
-    maxes.append(sum)
-    maxes.sort(reverse=True)
-    if len(maxes) > 3:
-        maxes.pop()
-
-print(functools.reduce(lambda sum, x: sum + x, maxes, 0))
+maxes = [sum([int(s) for s in elf.split("\n")]) for elf in input.split("\n\n")]
+maxes.sort(reverse=True)
+print(sum(maxes[:3]))
