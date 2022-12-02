@@ -23,9 +23,7 @@ for [abc, xyz] in entries:
     if xyz == "Y":
         score += 3 + elf_played + 1
     elif xyz == "X":
-        desired = (elf_played - 1)
-        if desired == -1:
-            desired = 2
+        desired = (elf_played - 1) % 3
         score += desired + 1
     else:
         desired = (elf_played + 1) % 3
