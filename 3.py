@@ -8,8 +8,8 @@ def get_priority (c):
 total = 0
 for row in input.split("\n"):
     half_len = len(row)//2
-    first_half = set(row[:half_len]) & set(row[half_len:len(row)])
-    total += get_priority(list(first_half)[0])
+    shared = set(row[:half_len]) & set(row[half_len:len(row)])
+    total += get_priority(list(shared)[0])
 
 print("part 1: %d" % total)
 
