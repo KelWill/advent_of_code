@@ -2,7 +2,7 @@ input = open("4.input").read()
 
 def has_overlap(a, b, checked_reverse = False):
     for n in b:
-        if (a[0] <= n and a[1] >= n):
+        if (a[0] <= n <= a[1]):
             return True
     if checked_reverse == False:
         return has_overlap(b, a, True)
