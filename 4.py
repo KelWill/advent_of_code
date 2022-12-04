@@ -11,7 +11,7 @@ print(f"part 1: {count}")
 count = 0
 for row in input.split("\n"):
     [a, b, c, d] = map(int, row.replace("-", ",").split(","))
-    if max(a, c) <= min(b, d):
+    if not (b < c or d < a):
         count += 1
 
 print(f"part 2: {count}")
