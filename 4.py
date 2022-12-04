@@ -1,17 +1,17 @@
 input = open("4.input").read()
 
-def has_overlap(a, b, checked_reverse = False):
-    for n in b:
-        if (a[0] <= n <= a[1]):
-            return True
-    if checked_reverse == False:
-        return has_overlap(b, a, True)
-    return False
+count = 0
+for row in input.split("\n"):
+    [x1, y1, x2, y2] = [int(d) for d in row.replace("-", ",").split(",")]    
+    if (x1 >= x2 and y1 <= y2) or (x2 >= x1 and y2 <= y1):
+        count += 1
+
+print(f"part 1 {count}")
 
 count = 0
 for row in input.split("\n"):
-    [left, right] = [[int(d) for d in s.split("-")] for s in row.split(",")]    
-    if has_overlap(left, right): 
+    [x1, y1, x2, y2] = [int(d) for d in row.replace("-", ",").split(",")]    
+    if max(x1, x2) <= min(y1, y2):
         count += 1
 
-print(count)
+print(f"part 2: {count}")
