@@ -28,18 +28,18 @@ graph = { "files": {}, "children": {}, "self": "/" }
 curr = graph
 rows = input.split("\n")
 i = 0
+
 while i < len(rows):
   row = rows[i]
-  if row[2:] == "ls":
+  if row.startswith("$ ls"):
     i += 1
     row = rows[i]
-    while i < len(rows) and rows[i][0] != "$":
+    while i < len(rows) and not rows[i][0].startswith("$"):
       row = rows[i]
-      first, second = row.split(" ")
-
-      if first == "dir":
-        curr["children"][second] = {
-          "self": second,
+      if row.startswith("dir"):
+        _, name = row.split(" ")
+        curr["children"][name] = {
+          "self": name,
           "files": {},
           "children": {},
           "parent": curr,
@@ -50,23 +50,17 @@ while i < len(rows):
       i += 1
     i -= 1
   else:
-    if row[0] != "$":
-      print("invalid row", row)
-      break
     if row == "$ cd ..":
       if "parent" in curr:
         curr = curr["parent"]
     elif row == "$ cd /":
       curr = graph
     else:
-      cd, x, child = row.split(" ")
+      cd, _, child = row.split(" ")
       curr = curr["children"][child]
   i += 1
 
-total = 0
-
 def calculate_size(curr):
-  global total
   size = 0
   for key in curr["files"]:
     size += curr["files"][key]
@@ -74,27 +68,29 @@ def calculate_size(curr):
     child = curr["children"][key]
     size += calculate_size(child)
   curr["size"] = size
-  if size <= 100000:
-    total += size
   return size
 
+def flatten (l):
+  results = []
+  for item in l:
+    if isinstance(item, list):
+      item = flatten(item)
+      results += item
+    else:
+      results.append(item)
+  return results
+
+def to_sizes (curr):
+  return [curr["size"]] + flatten([to_sizes(child) for key, child in curr["children"].items()])
+
 calculate_size(graph)
+sizes = to_sizes(graph)
+
+part1 = sum([size for size in sizes if size <= 100000])
+print(f"part1: {part1}")
+
 unused_space = 70000000 - graph["size"]
 size_required = 30000000 - unused_space 
 
-results = []
-def dfs (curr):
-  results.append(curr)
-  for key in curr["children"]:
-    dfs(curr["children"][key])
-
-dfs(graph)
-print(results)
-
-
-found = None
-for dir in results:
-  if dir["size"] >= size_required and (found == None or dir["size"] < found["size"]):
-    found = dir
-
-print(found["size"])
+size_to_delete = min(*[size for size in sizes if size >= size_required])
+print(f"part2: {size_to_delete}")
