@@ -24,7 +24,3 @@ for i, x in enumerate(sprites[1:]):
     # end= you can override print's default end-line "\n"
     # yoinked from https://github.com/fuglede/adventofcode/blob/master/2022/day10/solutions.py 
     print("#" if i % 40 - 1 <= x <= i % 40 + 1 else " ", end = "" if (i + 1) % 40 else "\n")
-
-# print("part2:")
-# for row in sprites:
-#   print(row)
