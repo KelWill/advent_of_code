@@ -28,7 +28,6 @@ for row in input.split("\n"):
     if not (cycle - 20) % 40:
       summed_signal_strength += cycle * sprite
 
-
   add, v = row.split(" ")
   v = int(v)
   sprite += v
