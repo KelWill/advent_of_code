@@ -1,5 +1,5 @@
 import sys
-from math import prod
+from math import prod, gcd
 from operator import add, mul
 
 input = open("11.input" if len(sys.argv) == 1 else sys.argv[1]).read()
@@ -31,7 +31,7 @@ class Monkey:
 
 def solve (is_part_1):
     monkeys = [Monkey(monkey_string) for monkey_string in input.split("\n\n")]
-    worry_divisor = prod([ monkey.div for monkey in monkeys])
+    worry_divisor = gcd(prod([ monkey.div for monkey in monkeys]))
 
     for _ in range(20 if is_part_1 else 10000):
         for monkey in monkeys:
