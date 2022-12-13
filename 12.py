@@ -9,7 +9,7 @@ def get_elev (c):
   else:
     return ord(c)
 
-def solve (is_part_1):
+def solve ():
   input = open("12.input" if len(sys.argv) == 1 else sys.argv[1]).read()
   data = [list(x) for x in input.split("\n")]
 
