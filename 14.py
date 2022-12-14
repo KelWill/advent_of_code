@@ -7,30 +7,23 @@ real_input = open("14.input").read()
 example_input = open("14.example").read()
 
 def print_grid (grid):
-  for y in range(0, 13):
+  for y in range(0, 11):
     row = ""
-    for x in range(470, 510):
-      c = " "
-      if (x, y) not in grid:
-        c = " "
-      elif grid[(x, y)] == 1:
-        c = "#"
-      else:
-        c = "o"
-      row += c
+    for x in range(480, 510):
+      row += " " if (x, y) not in grid else "#" if grid[(x, y)] == 1 else "o"
     print(row)
 
 
 def get_points (start, end):
-  [startx, starty] = start
-  [endx, endy] = end
+  (startx, starty) = start
+  (endx, endy) = end
 
   if startx == endx:
     return [(startx, y) for y in range(min(starty, endy), max(starty, endy) + 1)]
   elif starty == endy:
     return [(x, starty) for x in range(min(startx, endx), max(endx, startx) + 1)]
   else:
-    raise Exception("unexpected!")
+    raise Exception(f"unexpected start {start} and end {end}")
 
 def create_grid (input):
   grid = {}
@@ -43,7 +36,6 @@ def create_grid (input):
       end = list(map(int, points[i + 1].split(",")))
       for point in get_points(start, end):
         grid[point] = 1
-
         max_y = max(max_y, point[1])
 
   return (grid, max_y)
@@ -84,8 +76,8 @@ def solve (input, is_part_1):
     if simulate():
       return sand_count
 
-print(f"example input part1: {solve(example_input, True)}")
-print(f"example input part2: {solve(example_input, True)}")
+print(f"example input part1: {solve(example_input, True) - 1}")
+print(f"example input part2: {solve(example_input, False)}")
 
-print(f"part1: {solve(real_input, True)}")
+print(f"part1: {solve(real_input, True) - 1}")
 print(f"part2: {solve(real_input, False)}")
