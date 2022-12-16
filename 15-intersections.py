@@ -50,7 +50,7 @@ def solve (input, valid_range):
         continue
 
       if is_goal(sensors, (x, y)):
-        return x * 4000000 +  y
+        return (x * 4000000 +  y)
 
 
 
