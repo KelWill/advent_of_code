@@ -6,8 +6,6 @@ Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
 Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
 Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"""
 
-bag = "only 12 red cubes, 13 green cubes, and 14 blue cubes"
-
 
 def part1(s):
     total = 0
@@ -18,10 +16,8 @@ def part1(s):
     }
     for i, row in enumerate(s.split("\n")):
         turns = [re.findall(r'(\d+) (\w+)', turn) for turn in row.split(";")]
-        valid = True
-        for turn in turns:
-            if any(reqs[color] < int(n) for n, color in turn):
-                valid = False
+        valid = not any(any(reqs[color] < int(n)
+                            for n, color in turn) for turn in turns)
         if valid:
             total += i + 1
     return total
