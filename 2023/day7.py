@@ -25,14 +25,14 @@ def get_hand_score(hand):
 
 
 def main(s):
-    hands = [[] for _i in range(7)]
+    hands = []
     for row in s.split("\n"):
         hand, bid = row.split(" ")
         hand_order = tuple([order_part_2[char] for char in hand])
-        hands[get_hand_score(hand)].append((hand_order, int(bid), hand))
+        hands.append((get_hand_score(hand), hand_order, int(bid), hand))
 
-    hands = sum([sorted(x) for x in hands], [])
-    return sum(hand[1] * (i + 1) for i, hand in enumerate(reversed(hands)))
+    hands.sort()
+    return sum(hand[2] * (i + 1) for i, hand in enumerate(reversed(hands)))
 
 
 print("ex:", main(ex))
