@@ -13,14 +13,13 @@ order_part_2 = {k: i for i, k in enumerate(
 
 
 def get_hand_score(hand):
-    counts = Counter(h for h in hand)
+    counts = Counter(hand)
     joker_count = counts.pop("J") if "J" in counts else 0
     if joker_count >= 4:
         return 0
 
-    largest_c = max((counts[c], c) for c in counts)[1]
-
-    counts[largest_c] += joker_count
+    key = max((counts[c], c) for c in counts)[1]
+    counts[key] += joker_count
     vals = list(counts.values())
     return [5 in vals, 4 in vals, 3 in vals and 2 in vals, 3 in vals, vals.count(2) == 2, 2 in vals, True].index(True)
 
