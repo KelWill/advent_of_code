@@ -22,29 +22,15 @@ def get_hand_score(hand):
 
     counts[largest_c] += joker_count
     vals = list(counts.values())
-
-    if 5 in vals:
-        return 0
-    if 4 in vals:
-        return 1
-    if 3 in vals and 2 in vals:
-        return 2
-    if 3 in vals:
-        return 3
-    if vals.count(2) == 2:
-        return 4
-    if 2 in vals:
-        return 5
-    return 6
+    return [5 in vals, 4 in vals, 3 in vals and 2 in vals, 3 in vals, vals.count(2) == 2, 2 in vals, True].index(True)
 
 
 def main(s):
     hands = [[] for _i in range(7)]
     for row in s.split("\n"):
         hand, bid = row.split(" ")
-        hand_score = get_hand_score(hand)
         hand_order = tuple([order_part_2[char] for char in hand])
-        hands[hand_score].append((hand_order, int(bid), hand))
+        hands[get_hand_score(hand)].append((hand_order, int(bid), hand))
 
     hands = sum([sorted(x) for x in hands], [])
     return sum(hand[1] * (i + 1) for i, hand in enumerate(reversed(hands)))
