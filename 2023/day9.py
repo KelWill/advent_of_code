@@ -13,20 +13,18 @@ def get_ints(s):
 def get_next(seq):
     if all(n == 0 for n in seq):
         return [0] + seq
-    if len(set(seq)) == 1:
-        return seq + [seq[0]]
-
-    lower = [b - a for a, b in zip(seq, seq[1:])]
-    lower = get_next(lower)
-    return [seq[0] - lower[0]] + seq
+    lower = get_next([b - a for a, b in zip(seq, seq[1:])])
+    return seq + [seq[-1] + lower[-1]]
 
 
 def main(s):
-    seqs = []
+    part1 = 0
+    part2 = 0
     for l in s.split("\n"):
-        seqs.append(get_next(get_ints(l)))
+        part1 += get_next(get_ints(l))[-1]
+        part2 += get_next(list(reversed(get_ints(l))))[-1]
 
-    return sum(seq[0] for seq in seqs)
+    return (part1, part2)
 
 
 print("ex", main(ex))
