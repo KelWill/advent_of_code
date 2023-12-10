@@ -10,13 +10,13 @@ L.L7LFJ|||||FJL7||LJ
 L7JLJL-JLJLJL--JLJ.L"""
 
 V = {
-    "|": lambda v: v,
-    "-": lambda v: v,
-    "L": lambda v: 1j if v.real else -1,
-    "J": lambda v: -1j if v.real else -1,
-    "7": lambda v: -1j if v.real else 1,
-    "F": lambda v: 1j if v.real else 1,
-    "S": lambda v: 1  # looked at input to choose start vector
+    "|": (1, -1),
+    "-": (1j, -1j),
+    "L": (1j, -1),
+    "J": (-1j, -1),
+    "7": (-1j, 1),
+    "F": (1j, 1),
+    "S": (1, -1j),
 }
 
 BLOCKS = {
@@ -35,30 +35,25 @@ def main(s):
              for c in range(len(board[r]))}
     start = next(b for b in board if board[b] == "S")
     board[start] = "7"
-    curr = start
-    v = 1
     loop = set()
-    while curr != start or not loop:
-        loop.add(curr)
-        v = V[board[curr]](v)
-        curr += v
+    todo = [start]
+    while todo:
+        curr = todo.pop()
+        loop |= {curr}
+        todo += list({curr + d for d in V[board[curr]]} - loop)
 
-    expanded_board = set()
-    for pos in loop:
-        for d in BLOCKS[board[pos]]:
-            expanded_board.add(3 * pos + d)
+    expanded_board = {3 * pos + d for pos in loop for d in BLOCKS[board[pos]]}
 
     MAX_REAL = max(x.real for x in board)
     MAX_IMAG = max(x.imag for x in board)
     can_reach_edge = {}
-    for pos in board.keys() ^ loop:
+    for pos in board.keys() - loop:
         if pos in can_reach_edge:
             continue
 
         is_enclosed = True
         poss = [pos * 3]
         seen = set()
-
         while poss:
             a = poss.pop()
             if a.real > MAX_REAL * 3 or a.imag > MAX_IMAG * 3 or a.real < 0 or a.imag < 0:
@@ -77,8 +72,9 @@ def main(s):
                 can_reach_edge[pos / 3] = not is_enclosed
 
     enclosed = set(pos for pos in can_reach_edge if not can_reach_edge[pos])
+
     return len(loop) // 2, len(enclosed)
 
 
 print("ex:", main(ex))
-# print("real:", main(open("day10.input").read()))
+print("real:", main(open("day10.input").read()))
