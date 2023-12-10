@@ -1,6 +1,3 @@
-from itertools import groupby
-
-
 ex = """FF7FSF7F7F7F7F7F---7
 L|LJ||||||||||||F--J
 FL-7LJLJ||||||LJL-77
@@ -53,15 +50,19 @@ def main(s):
 
     MAX_REAL = max(x.real for x in board)
     MAX_IMAG = max(x.imag for x in board)
-    can_reach_edge = set()
+    can_reach_edge = {}
     for pos in board.keys() ^ loop:
+        if pos in can_reach_edge:
+            continue
+
+        can_reach_edge_from_pos = False
         poss = [pos * 3]
         seen = set()
         while poss:
             a = poss.pop()
             if a.real > MAX_REAL * 3 or a.imag > MAX_IMAG * 3 or a.real < 0 or a.imag < 0:
-                can_reach_edge.add(pos)
-                break
+                can_reach_edge_from_pos = True
+                continue
 
             for d in (1, -1, 1j, -1j):
                 aa = a + d
@@ -69,6 +70,12 @@ def main(s):
                     continue
                 seen.add(aa)
                 poss.append(aa)
+        for pos in seen:
+            if pos / 3 not in board:
+                continue
+            can_reach_edge[pos / 3] = can_reach_edge_from_pos
+
+    can_reach_edge = set(pos for pos in can_reach_edge if can_reach_edge[pos])
 
     enclosed = board.keys() ^ (can_reach_edge | loop)
     return len(loop), len(enclosed)
