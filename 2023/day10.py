@@ -55,13 +55,14 @@ def main(s):
         if pos in can_reach_edge:
             continue
 
-        can_reach_edge_from_pos = False
+        is_enclosed = True
         poss = [pos * 3]
         seen = set()
+
         while poss:
             a = poss.pop()
             if a.real > MAX_REAL * 3 or a.imag > MAX_IMAG * 3 or a.real < 0 or a.imag < 0:
-                can_reach_edge_from_pos = True
+                is_enclosed = False
                 continue
 
             for d in (1, -1, 1j, -1j):
@@ -70,16 +71,14 @@ def main(s):
                     continue
                 seen.add(aa)
                 poss.append(aa)
+
         for pos in seen:
-            if pos / 3 not in board:
-                continue
-            can_reach_edge[pos / 3] = can_reach_edge_from_pos
+            if pos / 3 in board and not pos / 3 in loop:
+                can_reach_edge[pos / 3] = not is_enclosed
 
-    can_reach_edge = set(pos for pos in can_reach_edge if can_reach_edge[pos])
-
-    enclosed = board.keys() ^ (can_reach_edge | loop)
-    return len(loop), len(enclosed)
+    enclosed = set(pos for pos in can_reach_edge if not can_reach_edge[pos])
+    return len(loop) // 2, len(enclosed)
 
 
 print("ex:", main(ex))
-print("ex:", main(open("day10.input").read()))
+# print("real:", main(open("day10.input").read()))
