@@ -13,23 +13,20 @@ ex = """...#......
 #...#....."""
 
 
+def calc_dists(rows, scale):
+    row_dist = []
+    for r, row in enumerate(rows):
+        row_dist.append((scale if len(set(row)) == 1 else 1) +
+                        (row_dist[-1] if r else 0))
+    return row_dist
+
+
 def main(s, scale=2):
     rows = s.split("\n")
-    empty_row_count = []
-    for r, row in enumerate(rows):
-        empty_row_count.append((len(set(row)) == 1) *
-                               (scale - 1) + (empty_row_count[-1] if r else 0))
-    empty_col_count = []
-    for c, col in enumerate(zip(*rows)):
-        empty_col_count.append((len(set(col)) == 1) *
-                               (scale - 1) + empty_col_count[-1] if c else 0)
-
-    G = set()
-    for r, row in enumerate(rows):
-        for c in range(len(row)):
-            if row[c] == "#":
-                G.add((r + empty_row_count[r], c + empty_col_count[c]))
-
+    row_dist = calc_dists(rows, scale)
+    col_dist = calc_dists(list(zip(*rows)), scale)
+    G = set((row_dist[r], col_dist[c])
+            for r in range(len(rows)) for c in range(len(rows[r])) if rows[r][c] == "#")
     return sum(abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in combinations(G, 2))
 
 
