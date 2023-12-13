@@ -17,14 +17,14 @@ ex = """#.##..##.
 
 
 def reflects(graph, reflection_row, smudge_count=0):
-    equal_rows = zip(range(reflection_row, -1, -1),
-                     range(reflection_row + 1, len(graph)))
+    equal_row_indexes = zip(range(reflection_row, -1, -1),
+                            range(reflection_row + 1, len(graph)))
 
     diff_count = 0
-    for a, b in equal_rows:
-        for c, d in zip(graph[a], graph[b]):
-            if c != d:
-                diff_count += 1
+    for a, b in equal_row_indexes:
+        diff_count += sum(c != d for c, d in zip(graph[a], graph[b]))
+        if diff_count > smudge_count:
+            return False
 
     return diff_count == smudge_count
 
