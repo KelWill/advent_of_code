@@ -13,18 +13,9 @@ O.#..O.#.#
 
 
 def roll_row(row):
-    result = [x for x in row]
-    prev_solid_point = -1
-    for r, char in enumerate(row):
-        if char == "#":
-            prev_solid_point = r
-        elif char == "O" and prev_solid_point == r - 1:
-            prev_solid_point = r
-        elif char == "O":
-            result[prev_solid_point + 1] = 'O'
-            result[r] = '.'
-            prev_solid_point += 1
-    return "".join(result)
+    row = ''.join(row)
+    return "#".join('O' * r.count('O') + '.' * r.count('.')
+                    for r in row.split("#"))
 
 
 def reverse_row_directions(rows):
@@ -40,7 +31,7 @@ def roll_dir(rows, dir):
         rows = transpose(rows)
     if dir == "S" or dir == "E":
         rows = reverse_row_directions(rows)
-    rows = tuple(roll_row(row) for row in rows)
+    rows = [roll_row(row) for row in rows]
     if dir == "S" or dir == "E":
         rows = reverse_row_directions(rows)
     if dir == "N" or dir == "S":
@@ -54,7 +45,6 @@ def get_key(rows):
 
 def roll_for_cycles(rows, n):
     seen = {}
-    rows = tuple(rows)
     r = 0
     bumped = False
     while r < n:
@@ -63,9 +53,7 @@ def roll_for_cycles(rows, n):
         key = get_key(rows)
         if key in seen and not bumped:
             cycle_length = r - seen[key]
-            # ...I should probably do math here
-            while r < n - cycle_length:
-                r += cycle_length
+            r += ((n - r - cycle_length) // cycle_length) * cycle_length
             bumped = True
         seen[key] = r
         r += 1
