@@ -12,32 +12,17 @@ def hash(code):
 
 
 def main(s):
-    boxes = [([], []) for _x in range(256)]
+    boxes = [dict() for _x in range(256)]
     part1score = sum(hash(line) for line in s.split(","))
     for line in s.split(","):
-        if "-" in line:
-            label = line.split("-")[0]
-            box_number = hash(label)
-            labels, focal_lengths = boxes[box_number]
-            if label in labels:
-                i = labels.index(label)
-                labels.pop(i)
-                focal_lengths.pop(i)
-        elif "=" in line:
-            label, r = line.split("=")
-            focal_length = int(r)
-            box_number = hash(label)
-            labels, focal_lengths = boxes[box_number]
-            if label in labels:
-                focal_lengths[labels.index(label)] = focal_length
-            else:
-                labels.append(label)
-                focal_lengths.append(focal_length)
-        else:
-            raise Exception(f"unknown {line}")
+        match line.replace("-", "=").split("="):
+            case [label, ""]:
+                boxes[hash(label)].pop(label, None)
+            case [label, focal_length]:
+                boxes[hash(label)][label] = int(focal_length)
 
-    part2score = sum((i + 1) * (b + 1) * boxes[i][1][b] for i in range(len(boxes))
-                     for b in range(len(boxes[i][1])))
+    part2score = sum((box_i + 1) * (lense_i + 1) * focal_length for box_i, box in enumerate(boxes)
+                     for lense_i, focal_length in enumerate(box.values()))
     return part1score, part2score
 
 
