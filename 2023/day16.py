@@ -11,50 +11,30 @@ ex = """.|...\\....
 
 
 def count_energized(positions, beams):
-    energized = set()
+    seen = set()
     while beams:
         next_beams = []
         for beam in beams:
             p, v = beam
-            if p not in positions:
+            if p not in positions or beam in seen:
                 continue
-            if beam in energized:
-                continue
-            energized.add(beam)
+            seen.add(beam)
             x = positions[p]
             if x == "." or (x == "|" and v.imag == 0) or (x == "-" and v.real == 0):
                 next_beams.append((p, v))
             elif x == "|":
-                next_beams.append((p, 1))
-                next_beams.append((p, -1))
+                next_beams += [(p, 1), (p, -1)]
             elif x == "-":
-                next_beams.append((p, 1j))
-                next_beams.append((p, -1j))
+                next_beams += [(p, 1j), (p, -1j)]
             elif x == "\\":
-                if v == 1j:
-                    next_beams.append((p, 1))
-                elif v == -1j:
-                    next_beams.append((p, -1))
-                elif v == 1:
-                    next_beams.append((p, 1j))
-                elif v == -1:
-                    next_beams.append((p, -1j))
+                next_beams.append((p, v.imag if v.imag else v.real * 1j))
             elif x == "/":
-                if v == 1j:
-                    next_beams.append((p, -1))
-                elif v == -1j:
-                    next_beams.append((p, 1))
-                elif v == 1:
-                    next_beams.append((p, -1j))
-                elif v == -1:
-                    next_beams.append((p, 1j))
+                next_beams.append((p, v * 1j * [-1, 1][bool(v.imag)]))
             else:
                 raise Exception("unknown")
         beams = [(p + v, v) for p, v in next_beams]
 
-    energized = set(p for p, v in energized)
-
-    return len(energized)
+    return len(set(p for p, v in seen))
 
 
 def main(s):
