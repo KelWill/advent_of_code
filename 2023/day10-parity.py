@@ -35,13 +35,13 @@ def main(s):
 
     enclosed = 0
     parity_changes = {pos: pos in loop and board[pos] in [
-        "|", "L", "J"] for pos in board}
+        "|", "7", "F"] for pos in board}
     parity = 0
     for pos in board:
         parity += parity_changes[pos]
         enclosed += not pos in loop and parity % 2
 
-    return enclosed
+    return len(loop) // 2, enclosed
 
 
 print("ex:", main(ex))
