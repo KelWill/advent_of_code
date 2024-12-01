@@ -14,7 +14,7 @@ def get_ints(s):
 
 def main (s):
     left, right = zip(*[get_ints(line) for line in s.split("\n")])
+    p1 = sum(abs(a - b) for a, b in zip(sorted(left), sorted(right)))
     right = Counter(right)
-    # part1: return sum(abs(a - b) for a, b in zip(sorted(left), sorted(right)))
-    return sum(a * right[a] for a in left)
+    return sum(a * right[a] for a in left), p1
 print(main(ex), main(real))
