@@ -50,7 +50,7 @@ def main ():
     q.put((0, (50, 500, 55, 0, 0, 0, 0, True)))
     while not q.empty():
         x, curr = q.get()
-        possibilities = do_turn(*curr)
+    possibilities = do_turn(*curr)
         for p in possibilities:
             player_loses = p[0] <= 0
             if player_loses:
