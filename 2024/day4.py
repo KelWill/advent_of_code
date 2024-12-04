@@ -1,6 +1,5 @@
 from collections import defaultdict
 
-
 ex = """MMMSXXMASM
 MSAMXMSMSA
 AMXSXMAAMM
@@ -19,25 +18,11 @@ def spells_xmas (words, pos):
     words = ["".join(words[pos + x * dd] for x in range(4)) for dd in directions]
     return sum(word == "XMAS" for word in words)
 
-
 def mas_count (words, pos):
     if words[pos] != "A":
         return 0
     diagonal = [words[pos - 1 - 1j] + words[pos + 1 + 1j], words[pos + 1 - 1j] + words[pos - 1 + 1j]]
     return all(w == "SM" or w == "MS" for w in diagonal)
-
-
-xcheck = """.M.S......
-..A..MSMS.
-.M.S.MAA..
-..A.ASMSM.
-.M.S.M....
-..........
-S.S.S.S.S.
-.A.A.A.A..
-M.M.M.M.M.
-..........
-"""
 
 def main (s):
     lines = s.split("\n")
