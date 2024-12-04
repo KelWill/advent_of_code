@@ -14,25 +14,11 @@ MXMXAXMASX"""
 real = open("./day4.input").read()
 
 
-def spells_xmas (words, starting_pos):
-    count = 0    
-    directions = []
-    for dr in ((1, -1, 0)):
-        for dc in ((1, -1, 0)):
-            if dr or dc:
-                directions.append(dr + dc * 1j)
-    for dd in directions:
-        pos = starting_pos
-        word = words[pos]
-        while words[pos]:
-            pos = pos + dd
-            word += words[pos]
-            if word == "XMAS":
-                count += 1
-                break
-            if not "XMAS".startswith(word):
-                break
-    return count
+def spells_xmas (words, pos):
+    directions = [dr + dc * 1j for dr in (1, -1, 0) for dc in (1, -1, 0) if dr or dc]
+    words = ["".join(words[pos + x * dd] for x in range(4)) for dd in directions]
+    return sum(word == "XMAS" for word in words)
+
 
 def mas_count (words, pos):
     if words[pos] != "A":
