@@ -14,22 +14,12 @@ def find_valid_order (page):
                 return find_valid_order(page)
     return page
 
-p1 = 0
-p2 = 0
+result = [0, 0]
 for line in pages_string.split("\n"):
     page = { c : i for i, c in enumerate(line.split(","))}
-    invalid = False
-    for c in page.keys():
-        invalid = invalid or any(after in page and page[after] < page[c] for after in rules[c])
-    if not invalid:
-        p1 += int(line.split(",")[len(page) // 2])
-    if invalid:
-        page = find_valid_order(page)
+    pre_order_list = sorted(page.keys(), key=lambda c: page[c])
+    page = find_valid_order(page)
+    post_order_list = sorted(page.keys(), key=lambda c: page[c])
+    result[pre_order_list == post_order_list] += int(post_order_list[len(post_order_list) // 2])
 
-        mid = len(page) // 2
-        for p in page.keys():
-            if page[p] == mid:
-                p2 += int(p)
-                break
-
-print(p1, p2)
+print(*result)
