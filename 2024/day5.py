@@ -18,14 +18,14 @@ p1 = 0
 p2 = 0
 for line in pages_string.split("\n"):
     page = { c : i for i, c in enumerate(line.split(","))}
-    valid = True
+    invalid = False
     for c in page.keys():
-        if any(after in page and page[after] < page[c]):
-            valid = False
-    if valid:
+        invalid = invalid or any(after in page and page[after] < page[c] for after in rules[c])
+    if not invalid:
         p1 += int(line.split(",")[len(page) // 2])
-    if not valid:
+    if invalid:
         page = find_valid_order(page)
+
         mid = len(page) // 2
         for p in page.keys():
             if page[p] == mid:
@@ -33,6 +33,3 @@ for line in pages_string.split("\n"):
                 break
 
 print(p1, p2)
-
-
-
