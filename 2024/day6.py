@@ -2,53 +2,40 @@ from collections import defaultdict
 
 input = open(0).read().split("\n")
 
-m = defaultdict(str) | { c + r * 1j: input[r][c] for c in range(len(input[0])) for r in range(len(input))}
-pos = [pos for pos, v in m.items() if v == "^"][0]
-dirs = [-1j, 1, 1j, -1]
-diri = 0
+starting_map = defaultdict(str) | { y + x * 1j: input[y][x] for x in range(len(input[0])) for y in range(len(input))}
+starting_pos = next(pos for pos, v in starting_map.items() if v == "^")
 
-while m[pos]:
-    m[pos] = "X"
-    dir = dirs[diri % 4]
-    if m[pos + dir] == "#":
-        diri += 1
-    else:
-        pos += dir
+def p1 ():
+    p1_map = defaultdict(str) | starting_map
+    pos = starting_pos
+    dir = -1
+    while p1_map[pos]:
+        p1_map[pos] = "X"
+        if p1_map[pos + dir] == "#":
+            dir *= -1j
+        else:
+            pos += dir
 
-print(sum(v == "X" for v in m.values()))
-
-starting_dict = defaultdict(str) | { c + r * 1j: input[r][c] for c in range(len(input[0])) for r in range(len(input))}
+    return p1_map
 
 def has_loop (m):
-    pos = [pos for pos, v in m.items() if v == "^"][0]
-    dirs = [-1j, 1, 1j, -1]
-    diri = 0
+    pos = starting_pos
+    dir = -1
     seen = set()
     while m[pos]:
-        m[pos] = "X"
-        dir = dirs[diri % 4]
         if (pos, dir) in seen:
             return True
         seen.add((pos, dir))
         if m[pos + dir] == "#":
-            diri += 1
-        else:
-            pos += dir
+            dir *= -1j
+        else: pos += dir
     return False
 
-def brute_force ():
-    keys =  [c + r * 1j for c in range(len(input[0])) for r in range(len(input))]
-    loop_count = 0
-    i = 0
-    for k in keys:
-        i += 1
-        print(i, len(keys), i / len(keys) * 100)
-        m = defaultdict(str) | { c + r * 1j: input[r][c] for c in range(len(input[0])) for r in range(len(input))}
-        if m[k] != ".":
-            continue
-        m[k] = "#"
-        loop_count += has_loop(m)
-    return loop_count
+def p2 ():
+    m = p1()
+    return sum(has_loop(m | { k: "#" }) for k in [key for key, v in m.items() if v == "X" if key != starting_pos])
 
-print(brute_force())
+
+print(sum(v == "X" for v in p1().values()))
+print(p2())
 
