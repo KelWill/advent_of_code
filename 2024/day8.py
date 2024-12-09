@@ -31,10 +31,10 @@ def main (s):
         for a, b in pairs:
             vec = b - a
             for v in (vec, -vec):
-                for curr in (a, b):
-                    while curr in G:
-                        result.add(curr)
-                        curr += v
+                curr = a
+                while curr in G:
+                    result.add(curr)
+                    curr += v
 
     return len(result)
 
