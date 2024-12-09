@@ -1,5 +1,4 @@
 from collections import defaultdict
-import math
 real = open("./day8.input").read()
 
 ex = """............
@@ -29,8 +28,7 @@ def main (s):
     for positions in points_by_type.values():
         pairs = [(a, b) for a in positions for b in positions if a != b]
         for a, b in pairs:
-            vec = b - a
-            for v in (vec, -vec):
+            for v in (b - a, a - b):
                 curr = a
                 while curr in G:
                     result.add(curr)
