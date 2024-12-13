@@ -3,23 +3,17 @@ from collections import defaultdict
 ex = open("./day12.ex").read().strip()
 real = open("./day12.input").read().strip()
 
-
-directions = (1, -1, 1j, -1j)
-
-
 def visit(G, pos):
+    directions = (1, -1, 1j, -1j)
     seen = set()
     edge = 0
     c = G[pos]
     todo = [pos]
     seen.add(pos)
-    perimiter = set()
     while todo:
         pos = todo.pop()
         neighbors = [pos + d for d in directions]
         edge += sum(G[n] != c for n in neighbors)
-        if edge:
-            perimiter.add(pos)
         to_add = [n for n in neighbors if G[n] == c and not n in seen]
         seen |= set(to_add)
         todo += to_add
@@ -78,4 +72,4 @@ def main(s):
 
 
 print(main(ex))
-print(main(real), 844132)
+print(main(real))
