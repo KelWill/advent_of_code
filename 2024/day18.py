@@ -4,7 +4,6 @@ import random
 
 def path_to_exit (nums, R, C):
     M = defaultdict(lambda: "#") | { x + y * 1j: "." for y in range(R + 1) for x in range(C + 1) }
-    i = 0
     for pos in nums:
         M[pos] = "#"
     seen = set()
