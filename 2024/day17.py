@@ -11,7 +11,6 @@ import re
 def nums (s):
     return [*map(int, re.findall(r"-?\d+", s))]
 
-
 def main (s, A_override = None):
     registers, program = s.split("\n\n")
     A, B, C = nums(registers)
@@ -47,7 +46,6 @@ def main (s, A_override = None):
 print("ex", main(ex))
 print("real", main(real))
 
-match_count = 0
 i = 2944
 while True:
     x = "2,4,1,1,7,5,0,3,1,4,4,4,5,5,3,0"
@@ -56,9 +54,5 @@ while True:
     if x.endswith(r):
         print(i, r)
         i = i << 3
-        continue
-    if m > match_count:
-        print(i, match_count, r)
-        match_count = m
-
-    i += 1
+    else:
+        i += 1
